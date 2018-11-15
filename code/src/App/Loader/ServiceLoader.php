@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Loader;
 
 use App\Application as Application;
@@ -10,16 +11,18 @@ class ServiceLoader
     private $finder;
 
     /**
-     * ServiceLoader constructor.
+     * @param Finder $finder
      */
-    public function __construct(Finder $finder){
+    public function __construct(Finder $finder)
+    {
         $this->finder = $finder;
     }
 
     /**
-     * Load all service definitions in the config services directory
+     * Load all service definitions in the configuration services directory.
      *
      * @param Application $app
+     *
      * @return Application
      */
     public function loadServices(Application $app, $directories)
@@ -29,6 +32,7 @@ class ServiceLoader
         foreach ($this->finder as $file) {
             require $file->getRealpath();
         }
+
         return $app;
     }
 }

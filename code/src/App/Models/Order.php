@@ -10,6 +10,12 @@ class Order extends Model
 
     public $timestamps = false;
 
+    /**
+     * @param int $startFrom
+     * @param int $limit
+     *
+     * @return array
+     */
     public function getOrders($startFrom, $limit)
     {
         if ($limit) {
@@ -34,6 +40,11 @@ class Order extends Model
         return $this->hasOne('App\Models\Distance', 'id');
     }
 
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
     public function createOrder($params)
     {
         $distance = '';
@@ -92,12 +103,17 @@ class Order extends Model
         return self::Where($matchCase)->pluck('status')->first();
     }
 
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
     private function getDistance($params)
     {
         $origin = $params['start_latitude'].','.$params['start_longitude'];
         $destination = $params['end_latitude'].','.$params['end_longitude'];
 
-        $mapApi = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" . $origin . "&destinations=" . $destination . "&key=" . getenv('GOOGLE_API_KEY');
+        $mapApi = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='.$origin.'&destinations='.$destination.'&key='.getenv('GOOGLE_API_KEY');
 
         $client = new \GuzzleHttp\Client();
         $res = $client->request('GET', $mapApi);
@@ -110,4 +126,3 @@ class Order extends Model
         return (int) $data->rows[0]->elements[0]->distance->value;
     }
 }
-

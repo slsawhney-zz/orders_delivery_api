@@ -2,21 +2,34 @@
 
 namespace App\Controller;
 
-use Psr\Log\LoggerInterface;
+//use Psr\Log\LoggerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use App\Models\Distance;
 use App\Models\Order;
 
 class ApiController
 {
     private $logger;
 
-    public function __construct(LoggerInterface $logger)
+    public function __invoke(RequestInterface $request, ResponseInterface $response, $args = [])
     {
-        $this->logger = $logger;
+        return $response->withJson($request->getQueryParams());
     }
 
+    /*
+        public function __construct(LoggerInterface $logger)
+        {
+            $this->logger = $logger;
+        }
+    */
+
+    /**
+     * Orders Function to list orders.
+     *
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
+     * @param int               $args
+     */
     public function orders(RequestInterface $request, ResponseInterface $response, $args)
     {
         $page = $args['page'];
@@ -29,15 +42,27 @@ class ApiController
 
         $order = new Order();
         $orders = $order->getOrders($startFrom, $limit);
-        $this->echoResponse(200, $orders, $response);
+
+        $responseBody = $response->getBody();
+        $responseBody->write(json_encode($orders));
+
+        return $response->withHeader('Content-Type', 'application/json')
+            ->withStatus(200)
+            ->withBody($responseBody);
     }
 
+    /**
+     * Function to save new order.
+     *
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
+     * @param int               $args
+     */
     public function saveOrder(RequestInterface $request, ResponseInterface $response, $args)
     {
-        $postMethod = $request->getMethod();
         $parsedBody = $request->getParsedBody();
 
-        $validationResponse = $this->verifyRequiredParams(array('origin', 'destination'), $postMethod, $parsedBody);
+        $validationResponse = $this->verifyRequiredParams(array('origin', 'destination'), $parsedBody);
 
         $information = $params = [];
         $params = [
@@ -48,32 +73,41 @@ class ApiController
         ];
 
         $flag = $this->validateLatitudeLongnitude($params);
+        $statusCode = 200;
 
         if ($flag) {
             $order = new Order();
             $result = $order->createOrder($params);
-            if ($res === 0) {
-                $information['message'] = 'Order not created successfully';
-                $this->echoResponse(500, $information, $response);
+            if ($result === 0) {
+                $information = ['message' => 'Order not created successfully'];
+                $statusCode = 500;
             } else {
-                $information['id'] = $result['id'];
-                $information['distance'] = $result['distance'];
-                $information['status'] = $result['status'];
-                $this->echoResponse(200, $information, $response);
+                $information = [
+            'id' => $result['id'],
+            'distance' => $result['distance'],
+            'status' => $result['status'],
+        ];
             }
         } else {
-            $information['error'] = 'Entered data is not valid';
-            $this->echoResponse(400, $information, $response);
+            $information = ['error' => 'Entered data is not valid'];
+            $statusCode = 400;
         }
+
+        $responseBody = $response->getBody();
+        $responseBody->write(json_encode($information));
+
+        return $response->withHeader('Content-Type', 'application/json')
+                ->withStatus($statusCode)
+                ->withBody($responseBody);
     }
 
-    public function echoResponse($statusCode, $information, $responseObj)
-    {
-        $responseObj = $responseObj->withStatus($statusCode);
-        $responseObj = $responseObj->withJson($information);
-        echo $responseObj;
-    }
-
+    /**
+     * function to update order.
+     *
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
+     * @param int               $args
+     */
     public function updateOrder(RequestInterface $request, ResponseInterface $response, $args)
     {
         $postMethod = $request->getMethod();
@@ -82,36 +116,52 @@ class ApiController
 
         $request_params = $this->verifyRequiredParams(array('status'), $postMethod, $parsedBody);
 
-        if ($parsedBody['status'] === 'taken') {
+        $information = ['error' => 'Entered data is not valid'];
+        $statusCode = 404;
+
+        if ($parsedBody['status'] === 'TAKEN') {
             $order = new Order();
             $result = $order->updateOrder($orderID);
+            $statusCode = 200;
 
             $information = [];
-            if ($result === 2) {
-                $information['error'] = 'INVALID_ORDER_ID';
-                $this->echoResponse(404, $information, $response);
-            } elseif ($result === 0) {
-                $information['error'] = 'ORDER_ALREADY_BEEN_TAKEN';
-                $this->echoResponse(409, $information, $response);
-            } elseif ($result === 1) {
-                $information['status'] = 'SUCCESS';
-                $this->echoResponse(200, $information, $response);
-            } else {
-                $information['error'] = 'ERROR OCCURED';
-                $this->echoResponse(500, $information, $response);
+
+            switch ($result) {
+                case 0:
+                    $information = ['error' => 'ORDER_ALREADY_BEEN_TAKEN'];
+                    $statusCode = 409;
+                    break;
+                case 1:
+                    $information = ['status' => 'SUCCESS'];
+                    break;
+                case 2:
+                    $information = ['error' => 'INVALID_ORDER_ID'];
+                    $statusCode = 404;
+                    break;
+                default:
+                    $information = ['error' => 'ERROR_OCCURED'];
+                    $statusCode = 500;
             }
-        } else {
-            $information['error'] = 'Entered data is not valid';
-            $this->echoResponse(400, $information, $response);
         }
+
+        $responseBody = $response->getBody();
+        $responseBody->write(json_encode($information));
+
+        return $response->withHeader('Content-Type', 'application/json')
+            ->withStatus($statusCode)
+            ->withBody($responseBody);
     }
 
     /**
-     * Verifying Request Method and Request.
+     * Verifying Method and Request.
      *
-     * @param array $required_fields
+     * @param array  $required_fields
+     * @param string $postMethod
+     * @param array  $parsedBody
+     *
+     * @return array
      */
-    private function verifyRequiredParams($required_fields, $postMethod, $parsedBody)
+    private function verifyRequiredParams($required_fields, $parsedBody)
     {
         $error = false;
         $error_fields = '';
@@ -125,14 +175,14 @@ class ApiController
         }
 
         if ($error) {
-            $response['error'] = 'Required field(s) '.substr($error_fields, 0, -2).' is missing or empty';
+            $response = ['error' => 'Required field(s) '.substr($error_fields, 0, -2).' is missing or empty'];
         }
 
         return $response;
     }
 
     /**
-     * Validating inputs.
+     * Validating Latitude and Longnitude inputs.
      *
      * @param array $params
      *
@@ -184,4 +234,3 @@ class ApiController
         return $flag;
     }
 }
-

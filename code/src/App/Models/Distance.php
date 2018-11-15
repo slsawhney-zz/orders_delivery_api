@@ -8,6 +8,11 @@ class Distance extends Model
 {
     protected $table = 'distance';
 
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
     public function isDistanceExists($params)
     {
         $matchCase = [
@@ -20,6 +25,12 @@ class Distance extends Model
         return self::Where($matchCase)->take(1)->get()->toArray();
     }
 
+    /**
+     * @param array $params
+     * @param int   $distance
+     *
+     * @return type
+     */
     public function saveDistance($params, $distance)
     {
         $id = self::insertGetId([
@@ -33,4 +44,3 @@ class Distance extends Model
         return [0 => ['id' => $id, 'distance' => $distance]];
     }
 }
-
