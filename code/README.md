@@ -4,7 +4,7 @@
 1)GET Request:
     By default it will act as a get request and will show the list of top 10 orders.
     But if want to limit your data or want to use pagination the you can append parameters in below manner:
-    URL: http://localhost:8080/orders?page=2&limit=10
+    URL: http://localhost:8080/orders/2/10
     Method:GET
 
     Response: [
