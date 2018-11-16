@@ -32,11 +32,8 @@ class ApiController
      */
     public function orders(RequestInterface $request, ResponseInterface $response, $args)
     {
-        $page = $args['page'];
-        $limit = $args['limit'];
-
-        $page = $page ?? getenv('START');
-        $limit = $limit ?? getenv('LIMIT');
+        $page = $args['page'] ?? getenv('START');
+        $limit = $args['limit'] ?? getenv('LIMIT');
 
         $startFrom = ($page == 1) ? 0 : (($page - 1) * getenv('LIMIT'));
 
@@ -83,10 +80,10 @@ class ApiController
                 $statusCode = 500;
             } else {
                 $information = [
-            'id' => $result['id'],
-            'distance' => $result['distance'],
-            'status' => $result['status'],
-        ];
+                    'id' => $result['id'],
+                    'distance' => $result['distance'],
+                    'status' => $result['status'],
+                ];
             }
         } else {
             $information = ['error' => 'Entered data is not valid'];
@@ -116,10 +113,10 @@ class ApiController
 
         $request_params = $this->verifyRequiredParams(array('status'), $postMethod, $parsedBody);
 
-        $information = ['error' => 'Entered data is not valid'];
+        $information = ['error' => 'Entered Body or OrderId is not valid'];
         $statusCode = 404;
 
-        if ($parsedBody['status'] === 'TAKEN') {
+        if ($parsedBody['status'] === 'TAKEN' && is_int($orderID)) {
             $order = new Order();
             $result = $order->updateOrder($orderID);
             $statusCode = 200;

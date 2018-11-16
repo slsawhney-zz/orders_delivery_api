@@ -23,13 +23,6 @@ class Order extends Model
         }
 
         return self::distance()->all()->toArray();
-
-        /*return $orders = Order::join('distance', 'order.distance_id = distance.id')
-     	->select('order.id', 'distance.distance', 'order.status')
-     	->orderBy('order.id', 'asc')
-     	->skip($startFrom)
-     	->take($limit)
-     	->get();*/
     }
 
     /**
