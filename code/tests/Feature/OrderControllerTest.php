@@ -23,7 +23,7 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
             ], }";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -49,7 +49,7 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
         $randId = rand(2, 40);
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/order/'.$randId,
+            'REQUEST_URI' => '/orders/'.$randId,
         ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();

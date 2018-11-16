@@ -77,7 +77,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ], }";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -104,7 +104,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -128,7 +128,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -151,7 +151,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -178,7 +178,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ]}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -205,7 +205,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -232,7 +232,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -259,7 +259,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -286,7 +286,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -313,7 +313,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -332,7 +332,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $action = new \App\Controller\ApiController();
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/order/'.$randOrderId,
+            'REQUEST_URI' => '/orders/'.$randOrderId,
         ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
@@ -347,7 +347,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $body = '';
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/order',
+            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -365,7 +365,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $action = new \App\Controller\ApiController();
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/order/10d',
+            'REQUEST_URI' => '/orders/10d',
         ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
@@ -379,7 +379,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $action = new \App\Controller\ApiController();
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/order/1',
+            'REQUEST_URI' => '/orders/1',
         ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();

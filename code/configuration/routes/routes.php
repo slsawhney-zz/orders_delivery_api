@@ -4,7 +4,7 @@
 $app->get('/orders[/{page}[/{limit}]]', 'ApiController:orders');
 
 //Post Request
-$app->post('/order', 'ApiController:saveOrder');
+$app->post('/orders', 'ApiController:saveOrder');
 
 //Patch Request
-$app->patch('/order/{id}', 'ApiController:updateOrder');
+$app->patch('/orders/{id}', 'ApiController:updateOrder');

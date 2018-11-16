@@ -39,9 +39,9 @@ class Order extends Model
         if (!empty($orders)) {
             foreach ($orders as $order) {
                 $orderData[] = [
-         'id' => $order->id,
-         'distance' => ($order->distance) ? ($order->distance / 1000).' Km' : '',
-                 'status' => ($order->status == 1) ? 'TAKEN' : 'UNASSIGNED',
+                    'id' => $order->id,
+                    'distance' => $order->distance,
+                    'status' => ($order->status == 1) ? 'TAKEN' : 'UNASSIGNED',
                ];
             }
         }
@@ -75,7 +75,7 @@ class Order extends Model
 
         return $returnParams = [
             'id' => $orderID,
-            'distance' => ($distanceArray[0]['distance']) ? ($distanceArray[0]['distance'] / 1000).' Km' : 0,
+            'distance' => $distanceArray[0]['distance'],
             'status' => 'UNASSIGN',
         ];
     }
@@ -109,7 +109,7 @@ class Order extends Model
     {
         $matchCase = ['id' => $id];
 
-        return self::Where($matchCase)->pluck('status')->first();
+        return self::Where($matchCase)->pluck('status')->sortByDesc('id')->first();
     }
 
     /**
