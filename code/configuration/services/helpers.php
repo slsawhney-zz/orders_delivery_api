@@ -3,8 +3,8 @@
 /** @var \Container\ContainerInterface $container */
 $container = $app->getContainer();
 
-$container['ApiController'] = function ($container) {
-    return new \App\Controller\ApiController(
+$container['ApiHelper'] = function ($container) {
+    return new \App\Helper\ApiHelper(
         $container->get('logger')
     );
 };

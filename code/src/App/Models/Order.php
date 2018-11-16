@@ -93,7 +93,7 @@ class Order extends Model
     {
         $matchCase = ['id' => $id];
 
-        return self::Where($matchCase)->pluck('status')->first();
+        return self::Where($matchCase)->pluck('status')->orderBy('id', 'desc')->first();
     }
 
     /**
@@ -106,7 +106,7 @@ class Order extends Model
         $origin = $params['start_latitude'].','.$params['start_longitude'];
         $destination = $params['end_latitude'].','.$params['end_longitude'];
 
-        $mapApi = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='.$origin.'&destinations='.$destination.'&key='.getenv('GOOGLE_API_KEY');
+        $mapApi = getenv('GOOGLE_API_URL').'&origins='.$origin.'&destinations='.$destination.'&key='.getenv('GOOGLE_API_KEY');
 
         $client = new \GuzzleHttp\Client();
         $res = $client->request('GET', $mapApi);

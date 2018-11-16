@@ -11,7 +11,7 @@
 
 1.  Clone the repo
 2.  Set Google Distance API key in /include/.env file
-3.  Run `start.sh` to download Docker CE and Docker Compose. Use $ `bash start.sh` command to execute it. 
+3.  Run `start.sh` to Docker Compose. Use $ `bash start.sh` command to execute it. 
 4.  After starting container, testcases will run automatically
 
 ## Manually Starting the docker and test Cases

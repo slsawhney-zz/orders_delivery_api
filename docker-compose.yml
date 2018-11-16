@@ -44,8 +44,8 @@ services:
     composer:
         container_name: delivery_composer
         restart: 'no'
-        image: composer/composer:php7
-        command: install
+        image: koutsoumpos89/composer-php7.1
+        command: install --ignore-platform-reqs
         working_dir: /var/www/html
         volumes:
             - "./code:/var/www/html"
