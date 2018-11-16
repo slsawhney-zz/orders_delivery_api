@@ -32,7 +32,7 @@
 
 **/code/tests**
 
-- this folder contains testcases
+- this folder contains testcases.
 ***Unit Test case***
 -/code/tests/Unit
 ***Integration Test case***
