@@ -11,7 +11,7 @@
 
 1.  Clone the repo
 2.  Set Google Distance API key in /include/.env file
-3.  Run `start.sh` to Docker Compose. Use $ `bash start.sh` command to execute it. 
+3.  Run `start.sh` file to compose Docker. Use $ `bash start.sh` or `./start.sh` command to run it. 
 4.  After starting container, testcases will run automatically
 
 ## Manually Starting the docker and test Cases
@@ -20,12 +20,14 @@
 2. Server is accessible at `http://localhost:8080`
 3. Run manual testcase suite by:
    **Unit test:** `docker exec delivery_php php ./vendor/phpunit/phpunit/phpunit /var/www/html/tests/Unit/OrderUnitTest.php`
+   
    **Integration tests:** `docker exec delivery_php php ./vendor/phpunit/phpunit/phpunit /var/www/html/tests/Feature/OrderControllerTest.php`
 
 ## How to Run Tests (From CLI)
 
  Test Cases can be executed by: 
    **Unit test:** `docker exec delivery_php php ./vendor/phpunit/phpunit/phpunit /var/www/html/tests/Unit/OrderUnitTest.php`
+   
    **Integration tests:** `docker exec delivery_php php ./vendor/phpunit/phpunit/phpunit /var/www/html/tests/Feature/OrderControllerTest.php`
 
 ## Application Structure
@@ -35,8 +37,10 @@
 - this folder contains testcases.
 ***Unit Test case***
 -/code/tests/Unit
+
 ***Integration Test case***
 -/code/Feature/Unit
+
 **/code**
 
 - contains all the server configuration files, classes and models
