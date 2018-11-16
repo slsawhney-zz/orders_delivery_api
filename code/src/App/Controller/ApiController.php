@@ -23,8 +23,8 @@ class ApiController
      */
     public function orders(RequestInterface $request, ResponseInterface $response, $args)
     {
-        $page = $args['page'] ?? getenv('START');
-        $limit = $args['limit'] ?? getenv('LIMIT');
+        $page = $request->getQueryParam('page') ?? getenv('START');
+        $limit = $request->getQueryParam('limit') ?? getenv('LIMIT');
 
         $startFrom = ($page == 1) ? 0 : (($page - 1) * getenv('LIMIT'));
 
