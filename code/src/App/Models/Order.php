@@ -93,7 +93,7 @@ class Order extends Model
     {
         $matchCase = ['id' => $id];
 
-        return self::Where($matchCase)->pluck('status')->orderBy('id', 'desc')->first();
+        return self::Where($matchCase)->pluck('status')->first();
     }
 
     /**
