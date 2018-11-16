@@ -18,19 +18,35 @@ class Order extends Model
      */
     public function getOrders($startFrom, $limit)
     {
-        if ($limit) {
-            return $orders = self::skip($startFrom)->take($limit)->get()->toArray();
-        }
+        $orders = self::select('order.*')
+                    ->join('distance', 'distance.id', '=', 'order.distance_id')
+                    ->select('order.id', 'distance.distance', 'order.status')
+                    ->skip($startFrom)
+                    ->take($limit)
+                    ->get();
 
-        return self::distance()->all()->toArray();
+        return $this->parseOrdersStatus($orders);
     }
 
     /**
-     * Get the distance record associated with the order.
+     * @param OrderObject $orders
+     *
+     * @return array
      */
-    public function distance()
+    public function parseOrdersStatus($orders)
     {
-        return $this->hasOne('App\Models\Distance', 'id');
+        $orderData = [];
+        if (!empty($orders)) {
+            foreach ($orders as $order) {
+                $orderData[] = [
+         'id' => $order->id,
+         'distance' => ($order->distance) ? ($order->distance / 1000).' Km' : '',
+                 'status' => ($order->status == 1) ? 'TAKEN' : 'UNASSIGNED',
+               ];
+            }
+        }
+
+        return $orderData;
     }
 
     /**
