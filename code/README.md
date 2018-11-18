@@ -4,23 +4,23 @@
 ## 1) GET Request:
     By default it will act as a get request and will show the list of top 10 orders.
     But if want to limit your data or want to use pagination the you can append parameters in below manner:
-    URL: http://localhost:8080/orders/2/10
+    URL: http://localhost:8080/orders?page=1&limit=3
     Method:GET
 
     Response: [
         {
             "id": 1,
-            "distance": "46.732 Km",
+            "distance": "46732",
             "status": "ASSIGN"
         },
         {
             "id": 2,
-            "distance": "46.732 Km",
+            "distance": "46732",
             "status": "ASSIGN"
         },
         {
             "id": 3,
-            "distance": "46.732 Km",
+            "distance": "46732",
             "status": "ASSIGN"
         },
 
@@ -29,13 +29,13 @@
 
         {
             "id": 10,
-            "distance": "128.287 Km",
+            "distance": "128287",
             "status": "ASSIGN"
         }
     ]
 
 ## 2) CREATE Request:
-    URL: http://localhost:8080/order
+    URL: http://localhost:8080/orders
     Method:POST
 
     Request :{
@@ -55,7 +55,7 @@
 
 
 ## 3) UPDATE Request:
-    URL: http://localhost:8080/order/<order_id>
+    URL: http://localhost:8080/orders/<order_id>
     Method:PATCH
 
     Request :{
