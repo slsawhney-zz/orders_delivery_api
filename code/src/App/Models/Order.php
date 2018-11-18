@@ -19,7 +19,7 @@ class Order extends Model
     public function getOrders($startFrom, $limit)
     {
         $orders = self::select('order.*')
-                    ->join('distance', 'distance.id', '=', 'order.distance_id')
+                    ->leftJoin('distance', 'distance.id', '=', 'order.distance_id')
                     ->select('order.id', 'distance.distance', 'order.status')
                     ->skip($startFrom)
                     ->take($limit)
@@ -70,7 +70,7 @@ class Order extends Model
 
         $orderID = self::insertGetId([
             'status' => 0,
-            'distance_id' => $distanceArray[0]['distance'],
+            'distance_id' => $distanceArray[0]['id'],
         ]);
 
         return $returnParams = [
