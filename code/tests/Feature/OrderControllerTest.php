@@ -50,6 +50,33 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('id', $data);
         $this->assertArrayHasKey('status', $data);
         $this->assertArrayHasKey('distance', $data);
+        
+        echo "\n \n ---------Creating orders (Empty Origin)--------- \n \n";
+
+        $response = $this->client->post('/orders', [
+            'json' => [
+                'origin' => [],
+                'destination' => [
+                    '28.535517',
+                    '77.391029',
+                ],
+            ],
+        ]);
+
+        $this->assertEquals(500, $response->getStatusCode());
+
+        echo "\n \n ---------Creating orders (Empty Destination)--------- \n \n";
+
+        $response = $this->client->post('/orders', [
+            'json' => [
+                'origin' => [
+                    '28.704060',
+                    '77.102493',
+                ],
+                'destination' => [],
+            ],
+        ]);
+        $this->assertEquals(500, $response->getStatusCode());
 
         echo "\n \n ---------Updating order--------- \n \n";
 
@@ -62,6 +89,18 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
         $data = json_decode($response->getBody()->getContents(), true);
 
         $this->assertEquals(200, $response->getStatusCode());
+
+        echo "\n \n ---------Updating order (Invalid Order ID)--------- \n \n";
+
+        $response = $this->client->patch('/orders/10000', [
+            'json' => [
+                'status' => 'TAKEN',
+            ],
+        ]);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $this->assertEquals(500, $response->getStatusCode());
 
         echo "\n \n ---------Fetching orders--------- \n \n";
         $response = $this->client->get('/orders', [
