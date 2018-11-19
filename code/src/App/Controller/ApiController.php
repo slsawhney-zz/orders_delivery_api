@@ -23,7 +23,7 @@ class ApiController
      */
     public function orders(RequestInterface $request, ResponseInterface $response, $args)
     {
-        $page = $request->getQueryParam('page') ?? getenv('START');
+	$page = $request->getQueryParam('page') ?? getenv('START');
         $limit = $request->getQueryParam('limit') ?? getenv('LIMIT');
 
         $startFrom = ($page == 1) ? 0 : (($page - 1) * getenv('LIMIT'));
@@ -49,8 +49,8 @@ class ApiController
     public function saveOrder(RequestInterface $request, ResponseInterface $response, $args)
     {
         $parsedBody = $request->getParsedBody();
-
-        $apiHelper = new ApiHelper();
+	
+	$apiHelper = new ApiHelper();
         $validationResponse = $apiHelper->verifyRequiredParams(array('origin', 'destination'), $parsedBody);
 
         $information = $params = [];
@@ -69,7 +69,7 @@ class ApiController
             $result = $order->createOrder($params);
             if ($result === 0) {
                 $information = ['message' => 'Order not created successfully'];
-                $statusCode = 406;
+                $statusCode = 500;
             } else {
                 $information = [
                     'id' => $result['id'],
@@ -79,7 +79,7 @@ class ApiController
             }
         } else {
             $information = ['error' => 'Entered data is not valid'];
-            $statusCode = 406;
+            $statusCode = 206;
         }
 
         $responseBody = $response->getBody();
@@ -103,7 +103,7 @@ class ApiController
         $parsedBody = $request->getParsedBody();
         $orderID = $args['id'];
 
-        $apiHelper = new ApiHelper();
+	$apiHelper = new ApiHelper();
         $request_params = $apiHelper->verifyRequiredParams(array('status'), $postMethod, $parsedBody);
 
         $information = ['error' => 'Entered Body or OrderId is not valid'];
@@ -126,7 +126,7 @@ class ApiController
                     break;
                 case 2:
                     $information = ['error' => 'INVALID_ORDER_ID'];
-                    $statusCode = 406;
+                    $statusCode = 204;
                     break;
                 default:
                     $information = ['error' => 'ERROR_OCCURED'];
