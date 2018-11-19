@@ -5,6 +5,26 @@ namespace App\Helper;
 class ApiHelper
 {
     /**
+     * @param int $limit
+     * @param int $page
+     * 
+     * @return array
+     */
+    public function pageLimitCheck($limit, $page){
+         $information = [];
+         if (!isset($limit) || !isset($page)) {
+            $information = ['error' => 'REQUEST_PARAMETER_MISSING'];
+        }
+        if (!is_numeric($limit) || !is_numeric($page)) {
+            $information = ['error' => 'INVALID_PARAMETER_TYPE'];
+        }
+        if ($limit  < 1 || $page  < 1) {
+            $information = ['error' => 'INVALID_PARAMETERS'];
+        }
+
+        return $information;
+    }
+    /**
      * Verifying Method and Request.
      *
      * @param array  $required_fields
@@ -31,6 +51,22 @@ class ApiHelper
         }
 
         return $response;
+    }
+    
+    /**
+     * Validating Latitude and Longnitude inputs counts.
+     *
+     * @param array $parsedBody
+     *
+     * @return bool
+     */
+    public function validateLatitudeLongitudeCount($parsedBody){
+
+        $flag = false;
+        if((count($parsedBody['origin']) == 2) && (count($parsedBody['destination']) == 2)){
+            $flag = true;
+        }
+        return $flag;
     }
 
     /**

@@ -63,9 +63,12 @@ class Order extends Model
         if (empty($distanceArray)) {
             $appHelper = new \App\Helper\ApiHelper();
             $distance = $appHelper->getDistance($params);
+            if (!$distance) {
+                return 0;
+            }
             $distanceArray = $distanceObject->saveDistance($params, $distance);
         }
-
+        
         $orderID = self::insertGetId([
             'status' => 0,
             'distance_id' => $distanceArray[0]['id'],
