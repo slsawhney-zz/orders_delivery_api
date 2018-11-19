@@ -5,27 +5,6 @@ use GuzzleHttp\Psr7;
 
 class ApiControllerTest extends \PHPUnit\Framework\TestCase
 {
-	
-	public function testGoogleApi()
-    {
-        echo "\n \n Starts Executing Unit Test Cases \n \n";
-
-        $action = new \App\Controller\ApiController();
-        $environment = \Slim\Http\Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => getenv('GOOGLE_API_URL'),
-	        'QUERY_STRING' => 'page=1&limit=3',
-        ]);
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-
-        $response = $action($request, $response, []);
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        echo "\n \n GET Orders test case passed \n \n";
-    }
-
     public function testOrders()
     {
         echo "\n \n Starts Executing Unit Test Cases \n \n";
