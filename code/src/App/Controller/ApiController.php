@@ -69,7 +69,7 @@ class ApiController
             $result = $order->createOrder($params);
             if ($result === 0) {
                 $information = ['message' => 'Order not created successfully'];
-                $statusCode = 500;
+                $statusCode = 406;
             } else {
                 $information = [
                     'id' => $result['id'],
@@ -126,7 +126,7 @@ class ApiController
                     break;
                 case 2:
                     $information = ['error' => 'INVALID_ORDER_ID'];
-                    $statusCode = 404;
+                    $statusCode = 400;
                     break;
                 default:
                     $information = ['error' => 'ERROR_OCCURED'];

@@ -120,4 +120,27 @@ class ApiHelper
 
         return flag;
     }
+
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
+    public function getDistance($params)
+    {
+        $origin = $params['start_latitude'].','.$params['start_longitude'];
+        $destination = $params['end_latitude'].','.$params['end_longitude'];
+
+        $mapApi = getenv('GOOGLE_API_URL').'&origins='.$origin.'&destinations='.$destination.'&key='.getenv('GOOGLE_API_KEY');
+
+        $client = new \GuzzleHttp\Client();
+        $res = $client->request('GET', $mapApi);
+        $data = json_decode($res->getBody());
+
+        if ($data->rows[0]->elements[0]->status === 'NOT_FOUND' || !$data) {
+            return false;
+        }
+
+        return (int) $data->rows[0]->elements[0]->distance->value;
+    }
 }

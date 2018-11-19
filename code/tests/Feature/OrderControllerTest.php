@@ -28,29 +28,6 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
     {
         echo "\n \n ---------Starts Executing API Integration Test--------- \n \n";
 
-        echo "\n \n ---------Creating orders--------- \n \n";
-
-        $response = $this->client->post('/orders', [
-            'json' => [
-                'origin' => [
-                    '28.704060',
-                    '77.102493',
-                ],
-                'destination' => [
-                    '28.535517',
-                    '77.391029',
-                ],
-            ],
-        ]);
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $data = json_decode($response->getBody()->getContents(), true);
-
-        $this->assertArrayHasKey('id', $data);
-        $this->assertArrayHasKey('status', $data);
-        $this->assertArrayHasKey('distance', $data);
-        
         echo "\n \n ---------Creating orders (Empty Origin)--------- \n \n";
 
         $response = $this->client->post('/orders', [
@@ -77,6 +54,29 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
             ],
         ]);
         $this->assertEquals(500, $response->getStatusCode());
+
+        echo "\n \n ---------Creating orders--------- \n \n";
+
+        $response = $this->client->post('/orders', [
+            'json' => [
+                'origin' => [
+                    '28.704060',
+                    '77.102493',
+                ],
+                'destination' => [
+                    '28.535517',
+                    '77.391029',
+                ],
+            ],
+        ]);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $this->assertArrayHasKey('id', $data);
+        $this->assertArrayHasKey('status', $data);
+        $this->assertArrayHasKey('distance', $data);
 
         echo "\n \n ---------Updating order--------- \n \n";
 
