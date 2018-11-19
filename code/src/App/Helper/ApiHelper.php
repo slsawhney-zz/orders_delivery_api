@@ -46,15 +46,9 @@ class ApiHelper
         $flag = $this->checkLatitudeLongitudeRange($params);
         $flag = $this->checkLatitudeLongitudeStartAndEnd($params);
         $flag = $this->checkLatitudeLongitudeStartAndEnd($params);
+        $flag = $this->checkBlankLatitudeLongitude($params);
 
-        if (
-            $params['start_latitude'] === '' ||
-            $params['start_longitude'] === '' ||
-            $params['start_latitude'] === '' ||
-            $params['end_latitude'] === ''
-        ) {
-            $flag = false;
-        } elseif ((trim($params['start_latitude'], '0') != (float) $params['start_latitude']) &&
+        if ((trim($params['start_latitude'], '0') != (float) $params['start_latitude']) &&
             (trim($params['start_longitude'], '0') != (float) $params['start_longitude'])
         ) {
             $flag = false;
@@ -63,6 +57,26 @@ class ApiHelper
         ) {
             $flag = false;
         }
+
+        return $flag;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return bool
+     */
+    public function checkBlankLatitudeLongitude($params)
+    {
+        $flag = false;
+        if (
+            $params['start_latitude'] == '' ||
+            $params['start_longitude'] == '' ||
+            $params['end_latitude'] == '' ||
+            $params['end_longitude'] == ''
+        ){
+	     $flag = false;
+	}
 
         return $flag;
     }
@@ -121,7 +135,7 @@ class ApiHelper
         return flag;
     }
 
-    /**
+   /**
      * @param array $params
      *
      * @return array

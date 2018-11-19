@@ -55,10 +55,10 @@ class ApiController
 
         $information = $params = [];
         $params = [
-             'start_latitude' => $parsedBody['origin']['0'],
-             'start_longitude' => $parsedBody['origin']['1'],
-             'end_latitude' => $parsedBody['destination']['0'],
-             'end_longitude' => $parsedBody['destination']['1'],
+             'start_latitude' => isset($parsedBody['origin']['0']) ? $parsedBody['origin']['0'] : '',
+             'start_longitude' => isset($parsedBody['origin']['1']) ? $parsedBody['origin']['1'] : '',
+             'end_latitude' => isset($parsedBody['destination']['0']) ? $parsedBody['destination']['0'] : '',
+             'end_longitude' => isset($parsedBody['destination']['1']) ? $parsedBody['destination']['1'] : '',
         ];
 
         $flag = $apiHelper->validateLatitudeLongitude($params);
@@ -79,7 +79,7 @@ class ApiController
             }
         } else {
             $information = ['error' => 'Entered data is not valid'];
-            $statusCode = 400;
+            $statusCode = 406;
         }
 
         $responseBody = $response->getBody();
@@ -107,7 +107,7 @@ class ApiController
         $request_params = $apiHelper->verifyRequiredParams(array('status'), $postMethod, $parsedBody);
 
         $information = ['error' => 'Entered Body or OrderId is not valid'];
-        $statusCode = 404;
+        $statusCode = 406;
 
         if ($parsedBody['status'] === 'TAKEN' && is_numeric($orderID)) {
             $order = new Order();
@@ -126,7 +126,7 @@ class ApiController
                     break;
                 case 2:
                     $information = ['error' => 'INVALID_ORDER_ID'];
-                    $statusCode = 400;
+                    $statusCode = 406;
                     break;
                 default:
                     $information = ['error' => 'ERROR_OCCURED'];
