@@ -40,7 +40,7 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
             ],
         ]);
 
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals(406, $response->getStatusCode());
 
         echo "\n \n ---------Creating orders (Empty Destination)--------- \n \n";
 
@@ -53,7 +53,7 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
                 'destination' => [],
             ],
         ]);
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals(406, $response->getStatusCode());
 
         echo "\n \n ---------Creating orders--------- \n \n";
 
@@ -100,7 +100,7 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals(406, $response->getStatusCode());
 
         echo "\n \n ---------Fetching orders--------- \n \n";
         $response = $this->client->get('/orders', [
