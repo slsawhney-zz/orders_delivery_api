@@ -7,23 +7,25 @@ class ApiHelper
     /**
      * @param int $limit
      * @param int $page
-     * 
+     *
      * @return array
      */
-    public function pageLimitCheck($limit, $page){
-         $information = [];
-         if (!isset($limit) || !isset($page)) {
+    public function pageLimitCheck($limit, $page)
+    {
+        $information = [];
+        if (!isset($limit) || !isset($page)) {
             $information = ['error' => 'REQUEST_PARAMETER_MISSING'];
         }
         if (!is_numeric($limit) || !is_numeric($page)) {
             $information = ['error' => 'INVALID_PARAMETER_TYPE'];
         }
-        if ($limit  < 1 || $page  < 1) {
+        if ($limit < 1 || $page < 1) {
             $information = ['error' => 'INVALID_PARAMETERS'];
         }
 
         return $information;
     }
+
     /**
      * Verifying Method and Request.
      *
@@ -52,7 +54,7 @@ class ApiHelper
 
         return $response;
     }
-    
+
     /**
      * Validating Latitude and Longnitude inputs counts.
      *
@@ -60,12 +62,13 @@ class ApiHelper
      *
      * @return bool
      */
-    public function validateLatitudeLongitudeCount($parsedBody){
-
+    public function validateLatitudeLongitudeCount($parsedBody)
+    {
         $flag = false;
-        if((count($parsedBody['origin']) == 2) && (count($parsedBody['destination']) == 2)){
+        if (2 == count($parsedBody['origin']) && 2 == count($parsedBody['destination'])) {
             $flag = true;
         }
+
         return $flag;
     }
 
@@ -78,28 +81,45 @@ class ApiHelper
      */
     public function validateLatitudeLongitude($params)
     {
-        $flag = false;
-        $flag = $this->checkLatitudeLongitudeRange($params);
-        $flag = $this->checkLatitudeLongitudeStartAndEnd($params);
-        $flag = $this->checkLatitudeLongitudeStartAndEnd($params);
+        $isValidLatitudeLongitude = $isRangeCorrect = $isTypeCorrect = $isStartEndCorrect = $isStartAndEndCorrect = $isOtherInfoCorrect = false;
+        $isOtherInfoCorrect = $this->validateLatitudeLongitudeOtherInfo($params);
+        $isRangeCorrect = $this->checkLatitudeLongitudeRange($params);
+        $isTypeCorrect = $this->checkLatitudeLongitudeType($params);
+        $isStartAndEndCorrect = $this->checkLatitudeLongitudeStartAndEnd($params);
 
+        if ($isOtherInfoCorrect && $isRangeCorrect && $isTypeCorrect && $isStartAndEndCorrect) {
+            $isValidLatitudeLongitude = true;
+        }
+
+        return $isValidLatitudeLongitude;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return bool
+     */
+    public function validateLatitudeLongitudeOtherInfo($params)
+    {
+        $isOtherInfoCorrect = true;
         if (
-            $params['start_latitude'] == '' ||
-            $params['start_longitude'] == '' ||
-            $params['end_latitude'] == '' ||
-            $params['end_longitude'] == ''
+            '' == $params['start_latitude'] ||
+            '' == $params['start_longitude'] ||
+            '' == $params['end_latitude'] ||
+            '' == $params['end_longitude']
         ) {
-            $flag = false;
+            $isOtherInfoCorrect = false;
         } elseif ((trim($params['start_latitude'], '0') != (float) $params['start_latitude']) &&
             (trim($params['start_longitude'], '0') != (float) $params['start_longitude'])
         ) {
-            $flag = false;
+            $isOtherInfoCorrect = false;
         } elseif ((trim($params['end_latitude'], '0') != (float) $params['end_latitude']) &&
             (trim($params['end_longitude'], '0') != (float) $params['end_longitude'])
         ) {
-            $flag = false;
+            $isOtherInfoCorrect = false;
         }
-        return $flag;
+
+        return $isOtherInfoCorrect;
     }
 
     /**
@@ -109,18 +129,18 @@ class ApiHelper
      */
     public function checkLatitudeLongitudeRange($params)
     {
-        $flag = false;
-        if ($params['start_latitude'] > -90.0 && $params['start_latitude'] < 90.0) {
-            $flag = true;
-        } elseif ($params['end_latitude'] > -90.0 && $params['end_latitude'] < 90.0) {
-            $flag = true;
-        } elseif ($params['start_longitude'] > -180.0 && $params['start_longitude'] < 180.0) {
-            $flag = true;
-        } elseif ($params['end_longitude'] > -180.0 && $params['end_longitude'] < 180.0) {
-            $flag = true;
+        $isRangeCorrect = true;
+        if ($params['start_latitude'] <= -90 || $params['start_latitude'] >= 90) {
+            $isRangeCorrect = false;
+        } elseif ($params['end_latitude'] <= -90 || $params['end_latitude'] >= 90) {
+            $isRangeCorrect = false;
+        } elseif ($params['start_longitude'] <= -180 || $params['start_longitude'] >= 180) {
+            $isRangeCorrect = false;
+        } elseif ($params['end_longitude'] <= -180 || $params['end_longitude'] >= 180) {
+            $isRangeCorrect = false;
         }
 
-        return flag;
+        return $isRangeCorrect;
     }
 
     /**
@@ -130,12 +150,13 @@ class ApiHelper
      */
     public function checkLatitudeLongitudeType($params)
     {
-        $flag = false;
-        if (is_string($params['start_latitude']) || is_string($params['end_latitude']) || is_string($params['start_longitude']) || is_string($params['end_longitude'])) {
-            $flag = false;
+        $isTypeCorrect = false;
+
+        if (is_float($params['start_latitude']) || is_float($params['end_latitude']) || is_float($params['start_longitude']) || is_float($params['end_longitude'])) {
+            $isTypeCorrect = true;
         }
 
-        return flag;
+        return $isTypeCorrect;
     }
 
     /**
@@ -145,18 +166,18 @@ class ApiHelper
      */
     public function checkLatitudeLongitudeStartAndEnd($params)
     {
-        $flag = false;
-        if ($params['start_latitude'] === $params['end_latitude'] ||
-            $params['start_longitude'] === $params['end_longitude'] ||
-            $params['start_latitude'] === $params['start_longitude'] ||
-            $params['end_latitude'] === $params['end_longitude']) {
-            $flag = false;
+        $isStartAndEndCorrect = true;
+        if ($params['start_latitude'] == $params['end_latitude'] ||
+            $params['start_longitude'] == $params['end_longitude'] ||
+            $params['start_latitude'] == $params['start_longitude'] ||
+            $params['end_latitude'] == $params['end_longitude']) {
+            $isStartAndEndCorrect = false;
         }
 
-        return flag;
+        return $isStartAndEndCorrect;
     }
 
-   /**
+    /**
      * @param array $params
      *
      * @return array
@@ -172,7 +193,7 @@ class ApiHelper
         $res = $client->request('GET', $mapApi);
         $data = json_decode($res->getBody());
 
-        if ($data->rows[0]->elements[0]->status === 'NOT_FOUND' || !$data) {
+        if ('NOT_FOUND' === $data->rows[0]->elements[0]->status || !$data) {
             return false;
         }
 

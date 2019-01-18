@@ -27,12 +27,12 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
     public function testOrdersIntegrations()
     {
         echo "\n \n ---------Starts Executing API Integration Test--------- \n \n";
-        
+
         echo "\n \n ---------Creating orders (Empty Origin)--------- \n \n";
 
         $response = $this->client->post('/orders', [
             'json' => [
-                'origin' => ["", ""],
+                'origin' => ['', ''],
                 'destination' => [
                     '28.535517',
                     '77.391029',
@@ -40,7 +40,7 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
             ],
         ]);
 
-        $this->assertEquals(206, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
 
         echo "\n \n ---------Creating orders (Empty Destination)--------- \n \n";
 
@@ -50,11 +50,11 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
                     '28.704060',
                     '77.102493',
                 ],
-                'destination' => ["", ""],
+                'destination' => ['', ''],
             ],
         ]);
-        $this->assertEquals(206, $response->getStatusCode());
-    
+        $this->assertEquals(404, $response->getStatusCode());
+
         echo "\n \n ---------Creating orders--------- \n \n";
 
         $response = $this->client->post('/orders', [
@@ -100,7 +100,7 @@ class OrderControllerTest extends \PHPUnit\Framework\TestCase
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
 
         echo "\n \n ---------Fetching orders--------- \n \n";
         $response = $this->client->get('/orders', [

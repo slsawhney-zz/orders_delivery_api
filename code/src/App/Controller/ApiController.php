@@ -29,21 +29,21 @@ class ApiController
         $apiHelper = new ApiHelper();
         $pageLimitCheck = $apiHelper->pageLimitCheck($page, $limit);
 
-        if(empty($pageLimitCheck)){
+        if (empty($pageLimitCheck)) {
             $offset = ($page - 1) * $limit;
 
             $order = new Order();
-            $orders = $order->getOrders($offset, $limit);
+            $information = $order->getOrders($offset, $limit);
 
-            $information = $orders;
-            $statusCode = 200;
+            $statusCode = !empty($information) ? 200 : 404;
         } else {
             $information = ['error' => $pageLimitCheck['error']];
-            $statusCode = 206;
+            $statusCode = 404;
         }
-        
+
         $responseBody = $response->getBody();
         $responseBody->write(json_encode($information));
+
         return $response->withHeader('Content-Type', 'application/json')
             ->withStatus($statusCode)
             ->withBody($responseBody);
@@ -59,15 +59,15 @@ class ApiController
     public function saveOrder(RequestInterface $request, ResponseInterface $response, $args)
     {
         $parsedBody = $request->getParsedBody();
-	
-	$apiHelper = new ApiHelper();
+
+        $apiHelper = new ApiHelper();
         $validationResponse = $apiHelper->verifyRequiredParams(array('origin', 'destination'), $parsedBody);
 
         $information = $params = [];
-	    
+
         $latitudeLongitudeCountFlag = $apiHelper->validateLatitudeLongitudeCount($parsedBody);
 
-        if($latitudeLongitudeCountFlag && empty($validationResponse)){
+        if ($latitudeLongitudeCountFlag && empty($validationResponse)) {
             $params = [
                  'start_latitude' => isset($parsedBody['origin']['0']) ? $parsedBody['origin']['0'] : '',
                  'start_longitude' => isset($parsedBody['origin']['1']) ? $parsedBody['origin']['1'] : '',
@@ -75,19 +75,20 @@ class ApiController
                  'end_longitude' => isset($parsedBody['destination']['1']) ? $parsedBody['destination']['1'] : '',
             ];
 
-            $flag = $apiHelper->validateLatitudeLongitude($params);
+            $isValid = $apiHelper->validateLatitudeLongitude($params);
             $statusCode = 200;
         } else {
             $information = ['error' => 'ENTERED_DATA_IS_NOT_VALID'];
-            if($validationResponse)
+            if ($validationResponse) {
                 $information = ['error' => $validationResponse['error']];
-            $statusCode = 206;
+            }
+            $statusCode = 404;
         }
 
-        if ($flag) {
+        if ($isValid) {
             $order = new Order();
             $result = $order->createOrder($params);
-            if ($result === 0) {
+            if (0 === $result) {
                 $information = ['message' => 'ORDER_NOT_CREATED'];
                 $statusCode = 500;
             } else {
@@ -99,7 +100,7 @@ class ApiController
             }
         } else {
             $information = ['error' => 'ENTERED_DATA_IS_NOT_VALID'];
-            $statusCode = 206;
+            $statusCode = 404;
         }
 
         $responseBody = $response->getBody();
@@ -123,13 +124,13 @@ class ApiController
         $parsedBody = $request->getParsedBody();
         $orderID = $args['id'];
 
-	$apiHelper = new ApiHelper();
+        $apiHelper = new ApiHelper();
         $request_params = $apiHelper->verifyRequiredParams(array('status'), $postMethod, $parsedBody);
 
         $information = ['error' => 'ENTERED_BODY_OR_ORDERID_NOT_CORRECT'];
-        $statusCode = 406;
+        $statusCode = 404;
 
-        if ($parsedBody['status'] === 'TAKEN' && is_numeric($orderID)) {
+        if ('TAKEN' === $parsedBody['status'] && is_numeric($orderID)) {
             $order = new Order();
             $result = $order->updateOrder($orderID);
             $statusCode = 200;
@@ -139,14 +140,13 @@ class ApiController
             switch ($result) {
                 case 0:
                     $information = ['error' => 'ORDER_ALREADY_BEEN_TAKEN'];
-                    $statusCode = 409;
                     break;
                 case 1:
                     $information = ['status' => 'SUCCESS'];
                     break;
                 case 2:
                     $information = ['error' => 'INVALID_ORDER_ID'];
-                    $statusCode = 204;
+                    $statusCode = 404;
                     break;
                 default:
                     $information = ['error' => 'ERROR_OCCURED'];

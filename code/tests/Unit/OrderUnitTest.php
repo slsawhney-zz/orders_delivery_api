@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Test\Unit\ApiController;
-use GuzzleHttp\Psr7;
 
 class ApiControllerTest extends \PHPUnit\Framework\TestCase
 {
@@ -13,18 +12,17 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/orders',
-	        'QUERY_STRING' => 'page=1&limit=3',
+            'QUERY_STRING' => 'page=1&limit=3',
         ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
 
-        $response = $action($request, $response, []);
+        $response = $action->orders($request, $response, []);
 
         $this->assertEquals(200, $response->getStatusCode());
 
         echo "\n \n GET Orders test case passed \n \n";
     }
-
 
     public function testOrdersNoDataFound()
     {
@@ -32,14 +30,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/orders',
-		    'QUERY_STRING' => 'page=10000&limit=3',
+            'QUERY_STRING' => 'page=10000&limit=3',
         ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
+        $response = $action->orders($request, $response, []);
 
-        $response = $action($request, $response, []);
-
-	$this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
 
         echo "\n \n GET Orders no data found test case passed \n \n";
     }
@@ -62,11 +59,10 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $body = new \Slim\Http\RequestBody();
-        $body->write($body);
         $response = new \Slim\Http\Response();
+        $response = $action($request, $response, $body);
 
- 	$this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());
         echo "\n \n Create Order test case passed \n \n";
     }
 
@@ -84,15 +80,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $body = new \Slim\Http\RequestBody();
-        $body->write($body);
         $response = new \Slim\Http\Response();
+        $response = $action->saveOrder($request, $response, $body);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
 
         echo "\n \n Create Order duplicate origin and destination test case passed \n \n";
     }
@@ -107,15 +101,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $body = new \Slim\Http\RequestBody();
-        $body->write($body);
         $response = new \Slim\Http\Response();
+        $response = $action->saveOrder($request, $response, $body);
 
-	$this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
 
         echo "\n \n Create Order missing origin test case passed \n \n";
     }
@@ -130,15 +122,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $body = new \Slim\Http\RequestBody();
-        $body->write($body);
         $response = new \Slim\Http\Response();
-        
-        $this->assertEquals(200, $response->getStatusCode());
+        $response = $action->saveOrder($request, $response, $body);
+
+        $this->assertEquals(404, $response->getStatusCode());
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
 
@@ -159,15 +149,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ]}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $body = new \Slim\Http\RequestBody();
-        $body->write($body);
         $response = new \Slim\Http\Response();
+        $response = $action->saveOrder($request, $response, $body);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
 
@@ -188,15 +176,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $body = new \Slim\Http\RequestBody();
-        $body->write($body);
         $response = new \Slim\Http\Response();
-        
-        $this->assertEquals(200, $response->getStatusCode());
+        $response = $action->saveOrder($request, $response, $body);
+
+        $this->assertEquals(404, $response->getStatusCode());
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
 
@@ -217,15 +203,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $body = new \Slim\Http\RequestBody();
-        $body->write($body);
         $response = new \Slim\Http\Response();
-        
-        $this->assertEquals(200, $response->getStatusCode());
+        $response = $action->saveOrder($request, $response, $body);
+
+        $this->assertEquals(404, $response->getStatusCode());
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
 
@@ -246,15 +230,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $body = new \Slim\Http\RequestBody();
-        $body->write($body);
         $response = new \Slim\Http\Response();
-        
-        $this->assertEquals(200, $response->getStatusCode());
+        $response = $action->saveOrder($request, $response, $body);
+
+        $this->assertEquals(404, $response->getStatusCode());
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
         echo "\n \n Create Order end longitude missing test case passed \n \n";
@@ -274,15 +256,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $body = new \Slim\Http\RequestBody();
-        $body->write($body);
         $response = new \Slim\Http\Response();
-        
-        $this->assertEquals(200, $response->getStatusCode());
+        $response = $action->saveOrder($request, $response, $body);
+
+        $this->assertEquals(404, $response->getStatusCode());
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
         echo "\n \n Create Order Invalid latitude range test case passed \n \n";
@@ -302,15 +282,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
             ],}";
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $body = new \Slim\Http\RequestBody();
-        $body->write($body);
         $response = new \Slim\Http\Response();
-        
-        $this->assertEquals(200, $response->getStatusCode());
+        $response = $action->saveOrder($request, $response, $body);
+
+        $this->assertEquals(404, $response->getStatusCode());
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
         echo "\n \n Create Order Invalid longitude range test case passed \n \n";
@@ -322,11 +300,11 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $action = new \App\Controller\ApiController();
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/orders/'.$randOrderId,
         ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
-        
+        $response = $action->updateOrder($request, $response, ['id' => $randOrderId, 'status' => 'TAKEN']);
+
         $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
@@ -339,15 +317,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $body = '';
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/orders',
         ]);
 
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $body = new \Slim\Http\RequestBody();
-        $body->write($body);
         $response = new \Slim\Http\Response();
-        
-        $this->assertEquals(200, $response->getStatusCode());
+        $response = $action->updateOrder($request, $response, ['id' => '1']);
+
+        $this->assertEquals(404, $response->getStatusCode());
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
         echo "\n \n Update Order missing parameter test case passed \n \n";
@@ -358,12 +334,13 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $action = new \App\Controller\ApiController();
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/orders/10d',
         ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
-        
-        $this->assertEquals(200, $response->getStatusCode());
+        $response = $action->updateOrder($request, $response, ['id' => '10d', 'status' => 'TAKEN']);
+
+        $this->assertEquals(404, $response->getStatusCode());
+
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
         echo "\n \n Update Order invalid order id test case passed \n \n";
@@ -374,13 +351,12 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $action = new \App\Controller\ApiController();
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/orders/1',
         ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
-        $response = $action($request, $response, ['status' => 'TAKEN']);
-        
-        $this->assertEquals(200, $response->getStatusCode());
+        $response = $action->updateOrder($request, $response, ['id' => '1', 'status' => 'TAKEN']);
+
+        $this->assertEquals(404, $response->getStatusCode());
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
         echo "\n \n Update Order order already taken test case passed \n \n";
