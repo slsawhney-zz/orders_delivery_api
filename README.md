@@ -38,11 +38,11 @@
 
 - this folder contains testcases.
 
-***Unit Test case***
--/code/tests/Unit
+  ***Unit Test case***
+    -/code/tests/Unit
 
-***Integration Test case***
--/code/Feature/Unit
+  ***Integration Test case***
+    -/code/Feature/Unit
 
 **/code**
 
