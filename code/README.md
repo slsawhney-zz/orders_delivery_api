@@ -45,7 +45,7 @@
 
     Response:{
         "id": 50,
-        "distance": "46.732 Km",
+        "distance": "46732",
         "status": "UNASSIGN"
     }
 
