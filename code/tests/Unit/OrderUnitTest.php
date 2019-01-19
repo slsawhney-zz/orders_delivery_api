@@ -17,7 +17,7 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
 
-        $response = $action->orders($request, $response, []);
+        $response = $action($request, $response, []);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -34,9 +34,9 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
-        $response = $action->orders($request, $response, []);
+        $response = $action($request, $response, []);
 
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());
 
         echo "\n \n GET Orders no data found test case passed \n \n";
     }
@@ -292,23 +292,6 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals('', $data);
         echo "\n \n Create Order Invalid longitude range test case passed \n \n";
-    }
-
-    public function testUpdateOrder()
-    {
-        $randOrderId = rand(2, 40);
-        $action = new \App\Controller\ApiController();
-        $environment = \Slim\Http\Environment::mock([
-            'REQUEST_METHOD' => 'PATCH',
-        ]);
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->updateOrder($request, $response, ['id' => $randOrderId, 'status' => 'TAKEN']);
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertEquals('', $data);
-        echo "\n \n Update Order test case passed \n \n";
     }
 
     public function testUpdateOrderMissingRequestBody()

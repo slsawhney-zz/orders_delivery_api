@@ -35,7 +35,7 @@ class ApiController
             $order = new Order();
             $information = $order->getOrders($offset, $limit);
 
-            $statusCode = !empty($information) ? 200 : 404;
+            $statusCode = 200;
         } else {
             $information = ['error' => $pageLimitCheck['error']];
             $statusCode = 404;
@@ -140,6 +140,7 @@ class ApiController
             switch ($result) {
                 case 0:
                     $information = ['error' => 'ORDER_ALREADY_BEEN_TAKEN'];
+                    $statusCode = 200;
                     break;
                 case 1:
                     $information = ['status' => 'SUCCESS'];
