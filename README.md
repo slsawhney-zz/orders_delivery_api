@@ -48,11 +48,10 @@
         2. localhost:8080/order - POST method to insert new order with origin and destination
         3. localhost:8080/order - PUT method to update status for taken.
 
-    **code/configuration/environments/environment.env**
+    **code/configuration/environments/standard.env**
     - add google apk key in corresponding to GOOGLE_API_KEY
 
     **code/configuration/settings.php**
-
     - contains all configuration related to database connection
 
 # API Reference Documentation: 
