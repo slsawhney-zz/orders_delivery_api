@@ -23,8 +23,8 @@ class ApiController
      */
     public function orders(RequestInterface $request, ResponseInterface $response, $args)
     {
-        $page = $request->getQueryParam('page');
-        $limit = $request->getQueryParam('limit');
+        $page = $request->getQueryParam('page'); // Number of Page
+        $limit = $request->getQueryParam('limit'); // Number of Elements on each Page
 
         $apiHelper = new ApiHelper();
         $pageLimitCheck = $apiHelper->pageLimitCheck($page, $limit);
@@ -61,11 +61,11 @@ class ApiController
         $parsedBody = $request->getParsedBody();
 
         $apiHelper = new ApiHelper();
-        $validationResponse = $apiHelper->verifyRequiredParams(array('origin', 'destination'), $parsedBody);
+        $validationResponse = $apiHelper->verifyRequiredParams(array('origin', 'destination'), $parsedBody); // Validation
 
         $information = $params = [];
 
-        $latitudeLongitudeCountFlag = $apiHelper->validateLatitudeLongitudeCount($parsedBody);
+        $latitudeLongitudeCountFlag = $apiHelper->validateLatitudeLongitudeCount($parsedBody); // Validation of Latitude/Longitude count.
 
         if ($latitudeLongitudeCountFlag && empty($validationResponse)) {
             $params = [
@@ -75,7 +75,7 @@ class ApiController
                  'end_longitude' => isset($parsedBody['destination']['1']) ? $parsedBody['destination']['1'] : '',
             ];
 
-            $isValid = $apiHelper->validateLatitudeLongitude($params);
+            $isValid = $apiHelper->validateLatitudeLongitude($params); // Validation for Latitude/Longitude data.
             $statusCode = 200;
         } else {
             $information = ['error' => 'ENTERED_DATA_IS_NOT_VALID'];
@@ -87,7 +87,7 @@ class ApiController
 
         if ($isValid) {
             $order = new Order();
-            $result = $order->createOrder($params);
+            $result = $order->createOrder($params); // New order creation.
             if (0 === $result) {
                 $information = ['message' => 'ORDER_NOT_CREATED'];
                 $statusCode = 500;
@@ -132,7 +132,7 @@ class ApiController
 
         if ('TAKEN' === $parsedBody['status'] && is_numeric($orderID)) {
             $order = new Order();
-            $result = $order->updateOrder($orderID);
+            $result = $order->updateOrder($orderID); // Update Order Status.
             $statusCode = 200;
 
             $information = [];

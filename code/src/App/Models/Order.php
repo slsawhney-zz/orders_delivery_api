@@ -25,7 +25,7 @@ class Order extends Model
                     ->take($limit)
                     ->get();
 
-        return $this->parseOrdersStatus($orders);
+        return $this->parseOrdersStatus($orders); // Order Status in human readable format
     }
 
     /**
@@ -41,7 +41,7 @@ class Order extends Model
                 $orderData[] = [
                     'id' => $order->id,
                     'distance' => $order->distance,
-                    'status' => ($order->status == 1) ? 'TAKEN' : 'UNASSIGNED',
+                    'status' => (1 == $order->status) ? 'TAKEN' : 'UNASSIGNED',
                ];
             }
         }
@@ -58,7 +58,7 @@ class Order extends Model
     {
         $distance = '';
         $distanceObject = new Distance();
-        $distanceArray = $distanceObject->isDistanceExists($params);
+        $distanceArray = $distanceObject->isDistanceExists($params); // Check existing distance for given set.
 
         if (empty($distanceArray)) {
             $appHelper = new \App\Helper\ApiHelper();
@@ -68,7 +68,7 @@ class Order extends Model
             }
             $distanceArray = $distanceObject->saveDistance($params, $distance);
         }
-        
+
         $orderID = self::insertGetId([
             'status' => 0,
             'distance_id' => $distanceArray[0]['id'],
@@ -88,13 +88,13 @@ class Order extends Model
      */
     public function updateOrder($id)
     {
-        $orderStatus = $this->getOrderStatus($id);
+        $orderStatus = $this->getOrderStatus($id); // Check order status.
 
-        if (!is_null($orderStatus) && $orderStatus === 0) {
+        if (!is_null($orderStatus) && 0 === $orderStatus) {
             self::where('id', $id)->update(['status' => 1]);
 
             return 1;
-        } elseif ($orderStatus === 1) {
+        } elseif (1 === $orderStatus) {
             return 0;
         } else {
             return 2;
@@ -108,12 +108,8 @@ class Order extends Model
      */
     private function getOrderStatus($id)
     {
-        $matchCase = ['id' => $id];
+        $matchCase = ['id' => $id, 'status' => 0]; //Check Race Condition.
 
         return self::Where($matchCase)->pluck('status')->sortByDesc('id')->first();
     }
 }
-
-
-
-

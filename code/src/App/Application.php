@@ -22,7 +22,7 @@ class Application extends App
         $serviceLoader = new ServiceLoader(new Finder());
         $serviceLoader->loadServices(
             $this,
-            $this->getContainer()->get('settings')['service_directories']
+            $this->getContainer()->get('settings')['service_directories'] // Load all services in given Directory
         );
     }
 

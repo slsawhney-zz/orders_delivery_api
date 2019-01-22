@@ -82,10 +82,10 @@ class ApiHelper
     public function validateLatitudeLongitude($params)
     {
         $isValidLatitudeLongitude = $isRangeCorrect = $isTypeCorrect = $isStartEndCorrect = $isStartAndEndCorrect = $isOtherInfoCorrect = false;
-        $isOtherInfoCorrect = $this->validateLatitudeLongitudeOtherInfo($params);
-        $isRangeCorrect = $this->checkLatitudeLongitudeRange($params);
-        $isTypeCorrect = $this->checkLatitudeLongitudeType($params);
-        $isStartAndEndCorrect = $this->checkLatitudeLongitudeStartAndEnd($params);
+        $isOtherInfoCorrect = $this->validateLatitudeLongitudeOtherInfo($params); // Check Latitude Longitude Empty condition.
+        $isRangeCorrect = $this->checkLatitudeLongitudeRange($params); // Check Latitude Longitude Range condition.
+        $isTypeCorrect = $this->checkLatitudeLongitudeType($params); // Check Latitude Longitude Data Type.
+        $isStartAndEndCorrect = $this->checkLatitudeLongitudeStartAndEnd($params); // Check Latitude Longitude Start and End value.
 
         if ($isOtherInfoCorrect && $isRangeCorrect && $isTypeCorrect && $isStartAndEndCorrect) {
             $isValidLatitudeLongitude = true;
@@ -187,10 +187,10 @@ class ApiHelper
         $origin = $params['start_latitude'].','.$params['start_longitude'];
         $destination = $params['end_latitude'].','.$params['end_longitude'];
 
-        $mapApi = getenv('GOOGLE_API_URL').'&origins='.$origin.'&destinations='.$destination.'&key='.getenv('GOOGLE_API_KEY');
+        $mapApi = getenv('GOOGLE_API_URL').'&origins='.$origin.'&destinations='.$destination.'&key='.getenv('GOOGLE_API_KEY'); // Google Map API URL.
 
         $client = new \GuzzleHttp\Client();
-        $res = $client->request('GET', $mapApi);
+        $res = $client->request('GET', $mapApi); // Request to get distance info.
         $data = json_decode($res->getBody());
 
         if ('NOT_FOUND' === $data->rows[0]->elements[0]->status || !$data) {
